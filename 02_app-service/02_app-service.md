@@ -210,7 +210,7 @@ Setting the Python version this way uses a default container provided by the pla
 We will also need to change the default path in App Service so it looks for the code in the right folder. Our application is under `02_app-service/code` and we need App Service to know to check there. Also while we are setting environment variables, let's tell our application it's in `PRODUCTION` environment mode which the app will use to determine it's starting port. 
 
 ```
-az webapp config appsettings set --name <app_name> --resource-group serverlessWorkshop --settings PROJECT=02_app-service/code ENVIRONMENT=production
+az webapp config appsettings set --name <app_name> --resource-group serverlessWorkshop --settings  ENVIRONMENT=production
 ```
 
 ## Configure App Service for local git
