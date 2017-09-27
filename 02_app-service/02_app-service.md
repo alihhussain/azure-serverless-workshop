@@ -53,12 +53,12 @@ You use this terminal window to run all the commands in this quickstart.
 Change to the directory that contains the sample code.
 
 ```bash
-cd code
+cd 02_app-service/code/
 ```
 
 ## Run the app locally
 
-Install the required packages using `pip`. The following command may need admin privileges such as passing `sudo` in Linux/Mac, or running in Administrator Mode with PowerShell.
+Install the required packages using `pip`. The following command may need admin privileges such as `sudo` in Linux/Mac, or running in Administrator Mode with PowerShell.
 
 ```bash
 pip install -r requirements.txt
@@ -70,13 +70,13 @@ Run the application locally by opening a terminal window and using the `Python` 
 python main.py
 ```
 
-Open a web browser, and navigate to the sample app at `http://localhost:5000`.
+Open a web browser, and navigate to the sample app at [http://localhost:5000](http://localhost:5000).
 
 You can see the voting app displayed in the page.
 
 ![Sample app running locally](assets/voting-app.png)
 
-So now we have our app running locally and we are happy with it! Let's get it on App Service next.
+So now we have our app running locally. This app is intentionally  simple and stateless. Now that we are happy with it. Let's get it on App Service.
 
 In your terminal window, press **Ctrl+C** to exit the web server.
 
@@ -96,7 +96,7 @@ If you get a 'Conflict'. Details: 409 error, change the username. If you get a '
 
 You create this deployment user only once; you can use it for all your Azure deployments.
 
-[!NOTE] Record the user name and password. You need them to deploy the web app later.
+*Record the user name and password. You need them to deploy the web app later.*
 
 ### Create Resource Group
 
@@ -206,6 +206,14 @@ az webapp config set --python-version 3.4 --name <app_name> --resource-group ser
 ```
 
 Setting the Python version this way uses a default container provided by the platform. To use your own container, see the CLI reference for the [az webapp config container set](https://docs.microsoft.com/en-us/cli/azure/webapp/config/container?view=azure-cli-latest#az_webapp_config_container_set) command.
+
+We will also need to change the default path in App Service so it looks for the code in the right folder. Our application is under `02_app-service/code` and we need App Service to know to check there.
+
+```
+az webapp config appsettings set --name <app_name> --resource-group serverlessWorkshop --settings PROJECT=02_app-service/code
+```
+
+
 
 ## Configure App Service for local git
 
