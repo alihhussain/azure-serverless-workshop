@@ -213,8 +213,6 @@ We will also need to change the default path in App Service so it looks for the 
 az webapp config appsettings set --name <app_name> --resource-group serverlessWorkshop --settings PROJECT=02_app-service/code ENVIRONMENT=production
 ```
 
-
-
 ## Configure App Service for local git
 
 Configure local Git deployment to the web app with the [az webapp deployment source config-local-git](https://docs.microsoft.com/en-us/cli/azure/webapp/deployment/source?view=azure-cli-latest#az_webapp_deployment_source_config_local_git) command.
