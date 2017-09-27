@@ -2,24 +2,23 @@
 
 This lab will provide an overview of modern cloud technologies, specifically focusing on patterns and practices deployable on Azure.
 
-We will develop a voting application using the following serverless technologies:
+We will develop a voting application using serverless and Platform-as-a-Service Azure technologies. Here are the following hands-on labs and their breakdown.
 
-- Voting App (multiple flavors)
-    - App Service
-    - Functions
-    - Web App for Containers
-    - Azure Container Instance
-- Data Layer
-    - CosmosDB
-        - Track votes and emails
-- Mailer
-    - Logic Apps
-        - Send results email
-- DevOps
-    - VSTS using CI/CD
-    - Templatizing a Solution (ARM)
-- Platform Monitoring
-    - OMS with App Insights
+## Module 1: Intro
+
+TODO
+
+## Module 02: App Service
+
+Deploy a simple, stateless voting web application via App Service. This application purposefully does not have a backend.
+
+## Module 03: Web App for Containers
+
+TODO
+
+## Module 04: Azure Container Instance 
+
+## Module 05: Adding CosmosDB to Azure Container Instance
 
 
 ## Code of Conduct
