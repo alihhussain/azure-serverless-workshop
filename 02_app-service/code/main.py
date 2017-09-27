@@ -1,6 +1,7 @@
 from flask import Flask, request, render_template
 import socket
 import sys
+import os
 
 app = Flask(__name__)
 
@@ -25,4 +26,7 @@ def index():
         return render_template("index.html", value1=vote1, value2=vote2, button1=button1, button2=button2, title=title)
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', debug=True, port=5000)
+    if os.environ['ENVIRONMENT'] in ['PRODUCTION', 'production']:
+        app.run(host='0.0.0.0', debug=True, port=80)
+    else:
+        app.run(host='0.0.0.0', debug=True, port=5000)

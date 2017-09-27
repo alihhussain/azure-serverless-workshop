@@ -207,10 +207,10 @@ az webapp config set --python-version 3.4 --name <app_name> --resource-group ser
 
 Setting the Python version this way uses a default container provided by the platform. To use your own container, see the CLI reference for the [az webapp config container set](https://docs.microsoft.com/en-us/cli/azure/webapp/config/container?view=azure-cli-latest#az_webapp_config_container_set) command.
 
-We will also need to change the default path in App Service so it looks for the code in the right folder. Our application is under `02_app-service/code` and we need App Service to know to check there.
+We will also need to change the default path in App Service so it looks for the code in the right folder. Our application is under `02_app-service/code` and we need App Service to know to check there. Also while we are setting environment variables, let's tell our application it's in `PRODUCTION` environment mode which the app will use to determine it's starting port. 
 
 ```
-az webapp config appsettings set --name <app_name> --resource-group serverlessWorkshop --settings PROJECT=02_app-service/code
+az webapp config appsettings set --name <app_name> --resource-group serverlessWorkshop --settings PROJECT=02_app-service/code ENVIRONMENT=production
 ```
 
 
