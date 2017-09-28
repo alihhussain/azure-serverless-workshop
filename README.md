@@ -2,8 +2,6 @@
 
 This lab will provide an overview of modern cloud technologies, specifically focusing on microservice and serverless patterns and best practices on Azure. 
 
-In this lab you will:
-
 [Module 01: Intro](01_intro/README.md)
 - Make sure you have all the prerequisites installed and get an overview of microservices and serverless technologies.
 
