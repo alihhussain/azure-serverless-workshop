@@ -69,7 +69,7 @@ docker build -t <YourDockerAccountName>/<YourDockerPublicRepo>:CosmosDBACI .
 
 Sample of how it should look like is:
 ```
-docker build -t alihhussain/azurepublic:CosmosDBACI ../
+docker build -t alihhussain/azurepublic:CosmosDBACI .
 ```
 
 Once build insure the image is listed by running the following command:
