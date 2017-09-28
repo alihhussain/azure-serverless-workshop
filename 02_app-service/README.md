@@ -1,7 +1,7 @@
 # Module 02: App Service for Web Apps
 
 ## Overview
-*App Service Web Apps* is a fully managed compute platform that is optimized for hosting websites and web applications. This [platform-as-a-service](https://en.wikipedia.org/wiki/Platform_as_a_service) (PaaS) offering of Microsoft Azure lets you focus on your business logic while Azure takes care of the infrastructure to run and scale your apps.
+*App Service Web Apps* is a fully managed compute platform that is optimized for hosting websites and web applications. This [platform-as-a-service](https://en.wikipedia.org/wiki/Platform_as_a_service) (PaaS) offering of Microsoft Azure lets you focus on your business logic while Azure takes care of the infrastructure to run and scale your apps. 
 
 ### What is a web app in App Service?
 In App Service, a *web app* is the compute resources that Azure provides for hosting a website or web application.  
@@ -9,6 +9,7 @@ In App Service, a *web app* is the compute resources that Azure provides for hos
 The compute resources may be on shared or dedicated virtual machines (VMs), depending on the pricing tier that you choose. Your application code runs in a managed VM that is isolated from other customers.
 
 Your code can be in any language or framework that is supported by Azure App Service, such as ASP.NET, Node.js, Java, PHP, or Python. You can also run scripts that use PowerShell and other scripting languages in a web app.
+
 
 ### Why use Web Apps?
 Here are some key features of App Service that apply to Web Apps:
@@ -27,7 +28,7 @@ Besides Web Apps in App Service, Azure offers other services that can be used fo
 
 ## Hands-on Lab
 
-This quickstart walks through how to develop and deploy a Python app to Azure Web Apps. You create the web app using the [Azure CLI](https://docs.microsoft.com/cli/azure/get-started-with-azure-cli), and you use Git to deploy sample Python code to the web app.
+This module walks through how to develop and deploy a Python app to Azure Web Apps. You create the web app using the [Azure CLI](https://docs.microsoft.com/cli/azure/get-started-with-azure-cli), and you use Git to deploy sample Python code to the web app.
 
 ![Sample app running in Azure](assets/hello-world-in-browser.png)
 
@@ -35,10 +36,11 @@ You can follow the steps below using a Mac, Windows, or Linux machine. Once the 
 
 ## Prerequisites
 
-To complete this tutorial:
+To complete this tutorial you will need:
 
-1. [Install Git](https://git-scm.com/)
-1. [Install Python](https://www.python.org/downloads/)
+1. [Git](https://git-scm.com/)
+2. [Python](https://www.python.org/downloads/)
+3. [Azure CLI](https://docs.microsoft.com/cli/azure/get-started-with-azure-cli) or use [Azure Cloudshell](https://docs.microsoft.com/en-us/azure/cloud-shell/quickstart)
 
 This tutorial assumes you have an active Azure Subscription, otherwise a free trial can be used (or using the Free Tier of App Service).
 
@@ -116,6 +118,8 @@ App Service plans define:
 * Instance size (small, medium, or large)
 * Scale count (1 to 20 instances)
 * SKU (Free, Shared, Basic, Standard, or Premium)
+
+**Note**: It is important to know what types of applications you will be deploying to App Service. For instance, you cannot deploy Linux and non-Linux (e.g. Windows) applications in the same App Service Plan. By default, App Service will default to a Windows environment, however has support for many runtimes (e.g. Python, Ruby, NodeJS, etc). If you're looking to deploy Linux applications natively on Linux, then you use the `--is-linux` flag when create your App Service plan. Note, that support for Linux requires using a `Standard` or `Premium` SKU when creating an App Service Plan (currently we are not using that).
 
 The following example uses the [az appservice plan create](https://docs.microsoft.com/en-us/cli/azure/appservice/plan?view=azure-cli-latest#az_appservice_plan_create) creates an App Service plan named `myAppServicePlan` in the **Free** pricing tier:
 
