@@ -204,7 +204,7 @@ Browse to the following URL using your web browser.
 http://<app_name>.azurewebsites.net
 ```
 
-![Sample app running in Azure](media/quickstart-custom-docker-image/hello-world-in-browser.png)
+![Sample app running in Azure](voting-app-webapp-for-containers.png)
 
 **Congratulations!** You've deployed a custom Docker image to Web App for Containers.
 
@@ -250,10 +250,12 @@ az webapp restart --name voting-app444 --resource-group serverlessWorkshop03
 
 This will tell App Service to restart it which forces it to check if there have been any updates to the image (and if there are, download the updated layers).
 
-Note that this may take a moment to restart depending on the changes.
+Note that this may take a moment to restart depending on the changes, given our changes up to a minute should be expected.
 
 Browse to the following URL using your web browser.
 
 ```bash
 http://<app_name>.azurewebsites.net
 ```
+
+![Sample app running in Azure](voting-app-webapp-for-containers-updated.png)
