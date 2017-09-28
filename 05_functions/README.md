@@ -1,144 +1,84 @@
-# Create your first function using the Azure CLI
+# Module 06: Functions - Create your first function in the Azure portal
 
-This tutorial walks through how to use Azure Functions to create your first function. You use the Azure CLI to create a function app, which is the serverless infrastructure that hosts your function. The function code itself is deployed from a GitHub sample repository.    
-You can follow the steps below using a Mac, Windows, or Linux computer. 
+Azure Functions lets you execute your code in a serverless environment without having to first create a VM or publish a web application. In this topic, learn how to use Functions to create a "hello world" function in the Azure portal.
 
-## Prerequisites 
-
-To complete this tutorial you will need:
-
-1. [Git](https://git-scm.com/)
-2. [Azure CLI](https://docs.microsoft.com/cli/azure/get-started-with-azure-cli) or use [Azure Cloudshell](https://docs.microsoft.com/en-us/azure/cloud-shell/quickstart)
+![Create function app in the Azure portal](https://docs.microsoft.com/en-us/azure/azure-functions/media/functions-create-first-azure-function/function-app-in-portal-editor.png)
 
 This tutorial assumes you have an active Azure Subscription, otherwise create a [free account](https://azure.microsoft.com/free/) before you begin.
 
-## Create a resource group
+## Log in to Azure
 
-Create a resource group with the [az group create](https://docs.microsoft.com/en-us/cli/azure/group?view=azure-cli-latest#az_group_create). An Azure resource group is a logical container into which Azure resources like function apps, databases, and storage accounts are deployed and managed.
-
-The following example creates a resource group named `serverlessWorkshop05`.  
-If you are not using Cloud Shell, sign in first using `az login`.
-
-```
-az group create --name myResourceGroup --location westeurope
-```
-
-
-## Create an Azure Storage account
-
-Functions uses an Azure Storage account to maintain state and other information about your functions. Create a storage account in the resource group you created by using the [az storage account create](/cli/azure/storage/account#create) command.
-
-In the following command, substitute a globally unique storage account name where you see the `<storage_name>` placeholder. Storage account names must be between 3 and 24 characters in length and may contain numbers and lowercase letters only.
-
-```
-az storage account create --name <storage_name> --location westeurope --resource-group myResourceGroup --sku Standard_LRS
-```
-
-After the storage account has been created, the Azure CLI shows information similar to the following example:
-
-```json
-{
-  "creationTime": "2017-04-15T17:14:39.320307+00:00",
-  "id": "/subscriptions/bbbef702-e769-477b-9f16-bc4d3aa97387/resourceGroups/myresourcegroup/...",
-  "kind": "Storage",
-  "location": "westeurope",
-  "name": "myfunctionappstorage",
-  "primaryEndpoints": {
-    "blob": "https://myfunctionappstorage.blob.core.windows.net/",
-    "file": "https://myfunctionappstorage.file.core.windows.net/",
-    "queue": "https://myfunctionappstorage.queue.core.windows.net/",
-    "table": "https://myfunctionappstorage.table.core.windows.net/"
-  },
-     ....
-    // Remaining output has been truncated for readability.
-}
-```
+Log in to the [Azure portal](https://portal.azure.com/).
 
 ## Create a function app
 
-You must have a function app to host the execution of your functions. The function app provides an environment for serverless execution of your function code. It lets you group functions as a logic unit for easier management, deployment, and sharing of resources. Create a function app by using the [az functionapp create](/cli/azure/functionapp#create) command. 
+You must have a function app to host the execution of your functions. A function app lets you group functions as a logic unit for easier management, deployment, and sharing of resources. 
 
-In the following command, substitute a unique function app name where you see the `<app_name>` placeholder and the storage account name for  `<storage_name>`. The `<app_name>` is used as the default DNS domain for the function app, and so the name needs to be unique across all apps in Azure. 
+1. Click the **New** button found on the upper left-hand corner of the Azure portal.
 
-```azurecli-interactive
-az functionapp create --name <app_name> --storage-account  <storage_name>  --resource-group myResourceGroup \
---consumption-plan-location westeurope
-```
-By default, a function app is created with the Consumption hosting plan, which means that resources are added dynamically as required by your functions and you only pay when functions are running. For more information, see [Choose the correct hosting plan](functions-scale.md). 
+1. Click **Compute** > **Function App**. Then, use the function app settings as specified in the table.
 
-After the function app has been created, the Azure CLI shows information similar to the following example:
+    ![Create function app in the Azure portal](https://docs.microsoft.com/en-us/azure/includes/media/functions-create-function-app-portal/function-app-create-flow.png)
 
-```json
-{
-  "availabilityState": "Normal",
-  "clientAffinityEnabled": true,
-  "clientCertEnabled": false,
-  "containerSize": 1536,
-  "dailyMemoryTimeQuota": 0,
-  "defaultHostName": "quickstart.azurewebsites.net",
-  "enabled": true,
-  "enabledHostNames": [
-    "quickstart.azurewebsites.net",
-    "quickstart.scm.azurewebsites.net"
-  ],
-   ....
-    // Remaining output has been truncated for readability.
-}
-```
+    | Setting      | Suggested value  | Description                                        |
+    | ------------ |  ------- | -------------------------------------------------- |
+    | **App name** | Globally unique name | Name that identifies your new function app. | 
+    | **Subscription** | Your subscription | The subscription under which this new function app will be created. | 
+    | **[Resource Group](../articles/azure-resource-manager/resource-group-overview.md)** |  myResourceGroup | Name for the new resource group in which to create your function app. | 
+    | **[Hosting plan](../articles/azure-functions/functions-scale.md)** |   Consumption plan | Hosting plan that defines how resources are allocated to your function app. In the default **Consumption Plan**, resources are added dynamically as required by your functions. You only pay for the time your functions run.   |
+    | **Location** | West Europe | Choose a location near you or near other services your functions will access. |
+    | **[Storage account](../articles/storage/common/storage-create-storage-account.md#create-a-storage-account)** |  Globally unique name |  Name of the new storage account used by your function app. Storage account names must be between 3 and 24 characters in length and may contain numbers and lowercase letters only. You can also use an existing account. |
 
-Now that you have a function app, you can deploy the actual function code from the GitHub sample repository.
+1. Click **Create** to provision and deploy the new function app.
 
-## Deploy your function code  
+## Favorite Functions in the portal 
 
-There are several ways to create your function code in your new function app. This topic connects to a sample repository in GitHub. As before, in the following code replace the `<app_name>` placeholder with the name of the function app you created. 
+If you haven't already done so, add Function Apps to your favorites in the Azure portal. This makes it easier to find your function apps. If you have already done this, skip to the next section. 
 
-```azurecli-interactive
-az functionapp deployment source config --name <app_name> --resource-group myResourceGroup --branch master \
---repo-url https://github.com/Azure-Samples/functions-quickstart \
---manual-integration 
-```
-After the deployment source has been set, the Azure CLI shows information similar to the following example (null values removed for readability):
+1. Log in to the [Azure portal](https://portal.azure.com/).
 
-```json
-{
-  "branch": "master",
-  "deploymentRollbackEnabled": false,
-  "id": "/subscriptions/bbbef702-e769-477b-9f16-bc4d3aa97387/resourceGroups/myResourceGroup/...",
-  "isManualIntegration": true,
-  "isMercurial": false,
-  "location": "West Europe",
-  "name": "quickstart",
-  "repoUrl": "https://github.com/Azure-Samples/functions-quickstart",
-  "resourceGroup": "myResourceGroup",
-  "type": "Microsoft.Web/sites/sourcecontrols"
-}
-```
+2. Click the arrow at the bottom left to expand all services, type `Functions` in the **Filter** field, and then click the star next to **Function Apps**.  
+ 
+    ![Create function app in the Azure portal](https://docs.microsoft.com/en-us/azure/includes/media/functions-portal-favorite-function-apps/functions-favorite-function-apps.png)
+
+    This adds the Functions icon to the menu on the left of the portal.
+
+3. Close the menu, then scroll down to the bottom to see the Functions icon. Click this icon to see a list of all your function apps. Click your function app to work with functions in this app. 
+ 
+    ![](https://docs.microsoft.com/en-us/azure/includes/media/functions-portal-favorite-function-apps/functions-function-apps-hub.png)
+
+Next, you create a function in the new function app.
+
+## Create an HTTP triggered function
+
+1. Expand your new function app, then click the **+** button next to **Functions**.
+
+2.  In the **Get started quickly** page, select **WebHook + API**, **Choose a language** for your function, and click **Create this function**. 
+   
+    ![Functions quickstart in the Azure portal.](https://docs.microsoft.com/en-us/azure/azure-functions/media/functions-create-first-azure-function/function-app-quickstart-node-webhook.png)
+
+A function is created in your chosen language using the template for an HTTP triggered function. You can run the new function by sending an HTTP request.
 
 ## Test the function
 
-Use cURL to test the deployed function on a Mac or Linux computer or using Bash on Windows. Execute the following cURL command, replacing the `<app_name>` placeholder with the name of your function app. Append the query string `&name=<yourname>` to the URL.
+1. In your new function, click **</> Get function URL**, select **default (Function key)**, and then click **Copy**. 
 
-```bash
-curl http://<app_name>.azurewebsites.net/api/HttpTriggerJS1?name=<yourname>
-```  
+    ![Copy the function URL from the Azure portal](https://docs.microsoft.com/en-us/azure/azure-functions/media/functions-create-first-azure-function/function-app-develop-tab-testing.png)
 
-![Function response shown in a browser.](./media/functions-create-first-azure-function-azure-cli/functions-azure-cli-function-test-curl.png)  
+2. Paste the function URL into your browser's address bar. Append the query string `&name=<yourname>` to this URL and press the `Enter` key on your keyboard to execute the request. The following is an example of the response returned by the function in the Edge browser:
 
-If you don't have cURL available in your command line, enter the same URL in the address of your web browser. Again, replace the `<app_name>` placeholder with the name of your function app, and append the query string `&name=<yourname>` to the URL and execute the request. 
+    ![Function response in the browser.](https://docs.microsoft.com/en-us/azure/azure-functions/media/functions-create-first-azure-function/function-app-browser-testing.png)
 
-    http://<app_name>.azurewebsites.net/api/HttpTriggerJS1?name=<yourname>
-   
-![Function response shown in a browser.](./media/functions-create-first-azure-function-azure-cli/functions-azure-cli-function-test-browser.png)  
+    The request URL includes a key that is required, by default, to access your function over HTTP.   
+
+3. When your function runs, trace information is written to the logs. To see the trace output from the previous execution, return to your function in the portal and click the up arrow at the bottom of the screen to expand **Logs**. 
+
+   ![Functions log viewer in the Azure portal.](https://docs.microsoft.com/en-us/azure/azure-functions/media/functions-create-first-azure-function/function-view-logs.png)
 
 ## Clean up resources
 
-Other quickstarts in this collection build upon this quickstart. If you plan to continue on to work with subsequent quickstarts or with the tutorials, do not clean up the resources created in this quickstart. If you do not plan to continue, use the following command to delete all resources created by this quickstart:
+If you'd like to clean up the resources, click the **Resource group** for the function app in the portal, and then click **Delete**. 
 
-```azurecli-interactive
-az group delete --name myResourceGroup
-```
-Type `y` when prompted.
+![Select the resource group to delete from the function app.](https://docs.microsoft.com/en-us/azure/includes/media/functions-quickstart-cleanup/functions-app-delete-resource-group.png)
 
-## Next steps
-
-[!INCLUDE [Next steps note](../../includes/functions-quickstart-next-steps.md)]
+You have created a function app with a simple HTTP triggered function.
