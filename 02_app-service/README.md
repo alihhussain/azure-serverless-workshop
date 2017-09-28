@@ -46,15 +46,13 @@ If you don't have an Azure subscription, create a [free account](https://azure.m
 
 ## Download the sample
 
-Since you have already cloned this repo, we will work out of this folder: `02_app-service/code` 
-
-You use this terminal window to run all the commands in this quickstart.
-
-Change to the directory that contains the sample code.
+Clone this repo:
 
 ```bash
-cd 02_app-service/code/
+git clone https://github.com/AzureCAT-GSI/azure-serverless-workshop.git
 ```
+
+You use this terminal window to run all the commands in this quickstart.
 
 ## Run the app locally
 
@@ -100,10 +98,10 @@ You create this deployment user only once; you can use it for all your Azure dep
 
 ### Create Resource Group
 
-The following example uses the [az group create](https://docs.microsoft.com/en-us/cli/azure/group?view=azure-cli-latest#az_group_create) creates a resource group named serverlessWorkshop in the East US location.
+The following example uses the [az group create](https://docs.microsoft.com/en-us/cli/azure/group?view=azure-cli-latest#az_group_create) creates a resource group named serverlessWorkshop02 in the East US location.
 
 ```
-az group create --name serverlessWorkshop --location eastus
+az group create --name serverlessWorkshop02 --location eastus
 ```
 
 You generally create your resource group and the resources in a region near you. To see all supported locations for Azure Web Apps, run the `az appservice list-locations` command.
@@ -122,7 +120,7 @@ App Service plans define:
 The following example uses the [az appservice plan create](https://docs.microsoft.com/en-us/cli/azure/appservice/plan?view=azure-cli-latest#az_appservice_plan_create) creates an App Service plan named `myAppServicePlan` in the **Free** pricing tier:
 
 ```
-az appservice plan create --name myAppServicePlan --resource-group serverlessWorkshop --sku FREE
+az appservice plan create --name myAppServicePlan --resource-group serverlessWorkshop02 --sku FREE
 ```
 
 When the App Service plan has been created, the Azure CLI shows information similar to the following example:
@@ -153,10 +151,9 @@ The web app provides a hosting space for your code and provides a URL to view th
 
 In the following command, replace *\<app_name>* with a unique name (valid characters are `a-z`, `0-9`, and `-`). If `<app_name>` is not unique, you get the error message "Website with given name <app_name> already exists." The default URL of the web app is `https://<app_name>.azurewebsites.net`. 
 
-**Note**: App Service is looking at the root of the folder to items that resemble a Python application, because we have multiple modules in this workshop to make it easy for App Service to read the app we have another repo branch called `webapp-python` that only shows the code only at the root. In a normal development environment, your main app starter files would be at root and you typically wouldn't use the `--deployment-source-branch` option.
 
 ```
-az webapp create --name <app_name> --resource-group serverlessWorkshop --plan myAppServicePlan --deployment-local-git --deployment-source-branch webapp-python
+az webapp create --name <app_name> --resource-group serverlessWorkshop02 --plan myAppServicePlan --deployment-local-git
 ```
 
 
@@ -205,7 +202,7 @@ You’ve created an empty new web app in Azure.
 Use the [az webapp config set](https://docs.microsoft.com/en-us/cli/azure/webapp/config?view=azure-cli-latest#az_webapp_config_set) command to configure the web app to use Python version `3.4`.
 
 ```
-az webapp config set --python-version 3.4 --name <app_name> --resource-group serverlessWorkshop
+az webapp config set --python-version 3.4 --name <app_name> --resource-group serverlessWorkshop02
 ```
 
 Setting the Python version this way uses a default container provided by the platform. To use your own container, see the CLI reference for the [az webapp config container set](https://docs.microsoft.com/en-us/cli/azure/webapp/config/container?view=azure-cli-latest#az_webapp_config_container_set) command.
@@ -213,7 +210,7 @@ Setting the Python version this way uses a default container provided by the pla
 We will also need to change the default path in App Service so it looks for the code in the right folder. Our application is under `02_app-service/code` and we need App Service to know to check there. Also while we are setting environment variables, let's tell our application it's in `PRODUCTION` environment mode which the app will use to determine it's starting port. 
 
 ```
-az webapp config appsettings set --name <app_name> --resource-group serverlessWorkshop --settings  ENVIRONMENT=production
+az webapp config appsettings set --name <app_name> --resource-group serverlessWorkshop02 --settings  ENVIRONMENT=production
 ```
 
 ## Configure App Service for local git
@@ -225,7 +222,7 @@ App Service supports several ways to deploy content to a web app, such as FTP, l
 In the following command, replace *\<app_name>* with your web app's name.
 
 ```
-az webapp deployment source config-local-git --name <app_name> --resource-group serverlessWorkshop --query url --output tsv
+az webapp deployment source config-local-git --name <app_name> --resource-group serverlessWorkshop02 --query url --output tsv
 ```
 
 The output has the following format:
@@ -346,4 +343,10 @@ You see your web app's Overview page. Here, you can perform basic management tas
 
 The left menu provides different pages for configuring your app.
 
-[!INCLUDE [cli-samples-clean-up](../../includes/cli-samples-clean-up.md)]
+## Clean up resources
+
+If you'd like to delete these resources:
+
+```bash
+az group delete --name serverlessWorkshop02
+```
