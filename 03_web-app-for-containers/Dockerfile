@@ -1,5 +1,4 @@
-# python:alpine is 3.{latest}
-FROM python:alpine 
+FROM python:3 
 
 # Install Flask server
 RUN pip install flask 
@@ -9,4 +8,4 @@ COPY src /src
 
 EXPOSE 80
 
-ENTRYPOINT ["python", "/src/main.py"]
+CMD ["python", "/src/main.py"]

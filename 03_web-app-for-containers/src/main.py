@@ -26,10 +26,4 @@ def index():
         return render_template("index.html", value1=vote1, value2=vote2, button1=button1, button2=button2, title=title)
 
 if __name__ == "__main__":
-    if os.environ.get('ENVIRONMENT') is not None:
-        if os.environ['ENVIRONMENT'] in ['PRODUCTION', 'production']:
-            app.run(host='0.0.0.0', debug=True, port=80)
-        else:
-            app.run(host='0.0.0.0', debug=True, port=5000)
-    else:
-        app.run(host='0.0.0.0', debug=True, port=5000)
+    app.run(host='0.0.0.0', debug=True, port=80)

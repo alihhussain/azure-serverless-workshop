@@ -37,7 +37,7 @@ We have copied over the exact same code that we had running in Module 02, howeve
 
 Now lets build the docker image. To do so you will need a Docker Hub account (linked above in the prereqs) and a public repository.
 
-From the `03_web-app-for-containers` folder, run the following command replacing `<DockerHubUsername>` with your Docker Hub user name.
+From the `03_web-app-for-containers` folder, run the following command replacing `<DockerHubUsername>` with your Docker Hub user name. 
 
 ```
 docker build -t <DockerHubUsername>/<AppName> .
@@ -53,7 +53,7 @@ Let's review what happened:
 - `docker` - the Docker daemon/engine that runs, manages, and creates Docker images
 - `build` - the build command tells Docker to get ready to build a Docker image based on a Dockerfile.
 - `-t` - we need to tag our image with our user name so that we push to Docker Hub it is accept correctly
-- `<DockerHubUsername>/<AppName>` - the name of our Docker Hub account and the name of the app we want to name it.
+- `<DockerHubUsername>/voting-app` - the name of our Docker Hub account and the name of the app (e.g. voting-app) we want to name it.
 - `.` - the dot is used to mean "current directory", in this case it provides the build command reference to find the Dockerfile.
 
 Once build finishes, you can view local images using the following command:
@@ -69,7 +69,18 @@ REPOSITORY                      TAG                 IMAGE ID            CREATED 
 richardjortega/voting-app         latest         18798f955b75        5 minutes ago       99.4MB
 ```
 
-Now lets push this image up to Docker Hub so that Web App for Containers will receive it.
+Test the application functions locally using the following Docker command:
+
+```
+docker run -p 80:80 richardjortega/voting-app
+```
+
+That command maps the exposed port of 80 from within the container to the host's port of 80. Now you can see it at
+- [http://localhost](http://localhost)
+
+You can exit the container with `CTRL+C`.
+
+Now that we have tested our application locally, let's push this to the Docker Hub so that Web App for Containers will receive it.
 
 To do so you will have to login within your Docker environment and enter your username and password, to do so run the following command:
 
@@ -78,8 +89,9 @@ docker login
 ```
 
 Lets now push the image up to DockerHub
+
 ```
-docker push <DockerHubUsername>/<AppName> 
+docker push <DockerHubUsername>/voting-app
 ```
 
 It will look something like this:
@@ -87,7 +99,7 @@ It will look something like this:
 docker push richardjortega/voting-app
 ```
 
-The image we pushed is public and now downloadable via Docker Hub to any machine or server. In a production scenario, you would have a private container registry like [Azure Container Registry](https://azure.microsoft.com/en-us/services/container-registry/).
+The image we pushed is public and now downloadable via Docker Hub to any machine or server. In a production scenario, you would have a private container registry like [Azure Container Registry](https://azure.microsoft.com/en-us/services/container-registry/). You can find details [here](https://docs.microsoft.com/en-us/azure/app-service/containers/app-service-linux-cli#using-docker-images-from-a-private-registry).
 
 ## Deploying the custom Docker image to Azure  
 
@@ -160,10 +172,10 @@ From your terminal window, create a web app in the `myAppServicePlan` App Servic
 In the following command, replace *\<app_name>* with a unique name (valid characters are `a-z`, `0-9`, and `-`). If `<app_name>` is not unique, you get the error message "Website with given name <app_name> already exists." The default URL of the web app is `https://<app_name>.azurewebsites.net`. 
 
 ```bash
-az webapp create --resource-group serverlessWorkshop03 --plan myAppServicePlan --name <app name> --deployment-container-image-name elnably/dockerimagetest
+az webapp create --resource-group serverlessWorkshop03 --plan myAppServicePlan --name <app name> --deployment-container-image-name <DockerHubUsername>/<AppName>
 ```
 
-In the preceding command, `--deployment-container-image-name` points to the public Docker Hub image [https://hub.docker.com/r/elnably/dockerimagetest/](https://hub.docker.com/r/elnably/dockerimagetest/). You can inspect its content at [https://github.com/rachelappel/docker-image](https://github.com/rachelappel/docker-image).
+In the preceding command, `--deployment-container-image-name` points to the public Docker Hub image on Docker Hub. 
 
 When the web app has been created, the Azure CLI shows output similar to the following example:
 
@@ -184,6 +196,8 @@ When the web app has been created, the Azure CLI shows output similar to the fol
 
 ## Browse to the app
 
+Deployment can take an initial bit of time as it has to download the base Docker image which can be up to a 1GB or more. In production environments, you would pick a container base image that is small and only has what you need.
+
 Browse to the following URL using your web browser.
 
 ```bash
@@ -193,3 +207,51 @@ http://<app_name>.azurewebsites.net
 ![Sample app running in Azure](media/quickstart-custom-docker-image/hello-world-in-browser.png)
 
 **Congratulations!** You've deployed a custom Docker image to Web App for Containers.
+
+## Update the app
+
+Similar to the exercise in Module 02 we can update our container.
+
+Using a local text editor, open the `config_file.cfg` file in the folder `src`, and make a change to the value of `VOTE1VALUE` and `VOTE2VALUE`:
+
+```python
+VOTE1VALUE = 'Star Wars'
+VOTE2VALUE = 'Star Trek'
+```
+
+We will now need to rebuild the image, running the same command as before:
+
+```
+docker build -t <DockerHubUserName>/voting-app .
+```
+
+Example:
+
+```
+docker build -t richardjortega/voting-app .
+```
+
+We will need to push this local image up to Docker Hub.
+
+```
+docker push <DockerHubUsername>/voting-app
+```
+
+It will look something like this:
+```
+docker push richardjortega/voting-app
+```
+
+Now we need to tell Azure that we have an update to our container (*Note*: In production environments, you may want to enable [CI/CD for Web App for Containers](https://docs.microsoft.com/en-us/azure/app-service/containers/app-service-linux-cli#enable-continuous-deployments-for-custom-docker-images))
+
+```
+az webapp config container set --name <app-name> --resource-group serverlessWorkshop03 --docker-custom-image-name <DockerHubUsername>/voting-app
+```
+
+Note that this may take a moment to restart.
+
+Browse to the following URL using your web browser.
+
+```bash
+http://<app_name>.azurewebsites.net
+```
