@@ -294,8 +294,13 @@ Modify the following values in the **[main.py](https://raw.githubusercontent.com
 url = <Put the connection string created in the previous section>
 db = client.<YourDBName>.<YourCollectionName> 
 ```
+Before running the python app locally insure pymongo binaries are install.
+To do so run the following command.
+```
+pip install pymongo
+```
 
-Run the following command to start the flask app
+Once pymongo module is install run the following command to start the flask app
 ```
 python main.py
 ```
