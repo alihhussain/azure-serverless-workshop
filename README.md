@@ -11,13 +11,11 @@ This lab will provide an overview of modern cloud technologies, specifically foc
 [Module 03: Web App for Containers](03_web-app-for-containers/README.md)
 - Deploy a simple, stateless voting application using a Platform-as-a-Service where you define and deploy a custom container and custom runtime.
 
-[Module 04: Azure Container Instances](04_azure-container-instances/README.md)
+[Module 04: Azure Container Instances and CosmosDB](04_cosmosdb-to-aci/README.md)
 - Now that you know about containers, deploy a simple, stateless voting application using a new Infrastructure-as-a-Service where containers are a first-class citizen (similar to Virtual Machines).
-
-[Module 05: Cosmos DB](05_cosmosdb-to-aci/README.md)
 - Add a reliable, scalable non-relational database backend to the voting application
 
-[Module 06: Functions and Logic Apps](06_functions/README.md)
+[Module 06: Functions](06_functions/README.md)
 - Send an email of the current results to yourself. 
 
 ## Code of Conduct
