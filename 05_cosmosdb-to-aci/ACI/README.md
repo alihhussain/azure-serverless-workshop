@@ -1,302 +1,180 @@
-# CosmosDB
-The very first thing we need to do is setup CosmosDB.
+# Azure Container Instance
+Before we can push an instance of this app to Azure Container Instance we will have to build the docker image that will be used by ACI service.
 ## Prerequisites
-*   Azure Subscription
+*   Docker
+*   Docker Public Repository
 *   Azure CLI
-*   jq (json Query)
-## The following steps are going to be taken to create a MongoDB within a CosmosDB Account
-* Authenticate in AzureCLI 2.0
-* Create Resource Group
-* Create CosmosDB Account
-* Create CosmosDB Database
-* Create CosmosDB Collection
-* Put together the python connection string
+## The following steps are going to be taken to create create the docker image and ACI deployment
+* Copy source code folder to local environment
+* Modify your specific environment variables in main.py (**DB_URL**,**dBName**,**dbCollection**)
+* Build the Docker Image
+* Push the Docker Image to public Repository
+* Create Azure Container Instance referencing the Docker image pushed
 
-### Authenticate in AzureCLI 2.0
-Login to the Azure CLI 2.0 by running the following command:
+### Copy Source Code into Local Environment
+This is going to be done by cloning the public Repository
 ```
-az login
+git clone https://github.com/AzureCAT-GSI/azure-serverless-workshop.git
+cd azure-serverless-workshop/05_cosmosdb-to-aci/ACI/flaskDockerFile/build/src
 ```
 The output your going to get is going to look like:
 ```
-To sign in, use a web browser to open the page https://aka.ms/devicelogin and enter the code <YourCodeHere> to authenticate.
+Cloning into 'azure-serverless-workshop'...
+remote: Counting objects: 107, done.
+remote: Compressing objects: 100% (70/70), done.
+remote: Total 107 (delta 39), reused 90 (delta 22), pack-reused 0
+Receiving objects: 100% (107/107), 546.50 KiB | 0 bytes/s, done.
+Resolving deltas: 100% (39/39), done.
+Checking connectivity... done.
 ```
-Go to the [Login Page](https://aka.ms/devicelogin) and authenticate using the code specified in the output of Login command **YourCodeHere**
+### Modify your specific environment variables
+Lets modify the three variables
+  *  **YourURL**
+  *  **YourDBName**
+  *  **YourCollectionName**
+```
+url = "<YourURL>"
+db = client.<YourDBName>.<YourCollectionName>
+```
+Once done it should look something like:
+```
+url = "mongodb://iotdbaccount***:cOl25CnJVEonhsGShaSJZqCNYWPIR9j8mfcQLaloJwvy4oG5oZVF9aenWdUchYXHuRrLf2JZqwKOk********==@iotdbaccount***.documents.azure.com:10255/?ssl=true&replicaSet=globaldb"
+db = client.cosmosdb.mongodbcollection
+```
 
-Once successfully logged in you will see the following output:
+
+
+Now lets build the docker image. To do so you will need a docker account and a public repository.
+Lets cd into the location of the docker file
 ```
-[
-  {
-    "cloudName": "AzureCloud",
-    "id": "<YourSubscriptionID>",
-    "isDefault": false,
-    "name": "Visual Studio Enterprise",
-    "state": "Enabled",
-    "tenantId": "<YourTenantID>",
-    "user": {
-      "name": "<YourUserName>",
-      "type": "user"
-    }
-  }
-]
+cd /azure-serverless-workshop/05_cosmosdb-to-aci/ACI/flaskDockerFile/build
 ```
-### Create Resource Group
-Before you execute the command lets set some environment variables:
+Run the following command to insure the Docker file is there
 ```
-location="eastus"
-resourcegroup="CosmosDB"
+ls -alh
 ```
-Now that the environment variables have been set lets execute the resource group creation command:
+Output will look as follows:
 ```
-az group create -l $location -n $resourcegroup
+[jenkins@jenkins build]$ ls -alh
+total 16K
+drwxrwxr-x. 3 jenkins jenkins 4.0K Sep 28 06:48 .
+drwxrwxr-x. 3 jenkins jenkins 4.0K Sep 28 06:48 ..
+-rw-rw-r--. 1 jenkins jenkins  163 Sep 28 06:48 Dockerfile
+drwxrwxr-x. 4 jenkins jenkins 4.0K Sep 28 06:49 src
 ```
-Your output will look like:
+Now lets build the docker image by running the following command.
+```
+docker build -t <YourDockerAccountName>/<YourDockerPublicRepo>:CosmosDBACI .
+```
+
+Sample of how it should look like is:
+```
+docker build -t alihhussain/azurepublic:CosmosDBACI .
+```
+
+Once build insure the image is listed by running the following command:
+```
+docker images
+```
+
+Output should look like:
+```
+[jenkins@jenkins build]$ docker images
+REPOSITORY                      TAG                 IMAGE ID            CREATED             SIZE
+alihhussain/azurepublic         CosmosDBACI         18798f955b75        5 minutes ago       103MB
+```
+Now lets push this image up to Docker Hub so that ACI can fetch it
+To do so you will have to login within your docker environment, to do so run the following command:
+```
+docker login
+```
+Specify the username
+```
+Login with your Docker ID to push and pull images from Docker Hub. If you don't have a Docker ID, head over to https://hub.docker.com to create one.
+Username:
+```
+Specify the password:
+```
+Password:
+```
+Ensure the login has succeeded:
+```
+Login Succeeded
+```
+Lets now push the image up to DockerHub
+```
+docker push <YourDockerAccountName>/<YourDockerPublicRepo>:CosmosDBACI 
+```
+It will look something like this:
+```
+docker push alihhussain/azurepublic:CosmosDBACI
+```
+# Create Azure Container Instance
+To run the Azure CLI commands ensure you are logged in and have the resource name which was created in the earlier section.
+
+To create the ACI instance run the following command substituting for your **ResourceGroup**, **ACI-Name**, **YourDockerAccountName**, and **YourDockerPublicRepo**,
+```
+az container create -g <YourResourceGroup> --name <ACI-Name> --image <YourDockerAccountName>/<YourDockerPublicRepo>:CosmosDBACI --cpu 1 --memory 1 --ip-address public
+```
+It should look something like:
+```
+az container create -g CosmosDB --name azurevote --image alihhussain/azurepublic:CosmosDBACI --cpu 1 --memory 1 --ip-address public
+```
+The output will look something like:
 ```
 {
-  "id": "/subscriptions/e729c299-db43-40ce-****-******/resourceGroups/CosmosDB",
-  "location": "eastus",
-  "managedBy": null,
-  "name": "CosmosDB",
-  "properties": {
-    "provisioningState": "Succeeded"
-  },
-  "tags": null
-}
-
-```
-### Create CosmosDB Account
-Before you execute the command lets set some environment variables:
-```
-resourcegroup="CosmosDB"
-dbkind="MongoDB"
-dbaccountname="mongodbcosmos$(shuf -i1-1000 -n1)"
-```
-Lets now create the CosmosDB account by executing the following command:
-```
-az cosmosdb create -n $dbaccountname -g $resourcegroup --kind $dbkind
-```
-Your output will look like:
-```
-{
-  "consistencyPolicy": {
-    "defaultConsistencyLevel": "Session",
-    "maxIntervalInSeconds": 5,
-    "maxStalenessPrefix": 100
-  },
-  "databaseAccountOfferType": "Standard",
-  "documentEndpoint": "https://****.documents.azure.com:443/",
-  "enableAutomaticFailover": false,
-  "failoverPolicies": [
+  "containers": [
     {
-      "failoverPriority": 0,
-      "id": "{
-  "consistencyPolicy": {
-    "defaultConsistencyLevel": "Session",
-    "maxIntervalInSeconds": 5,
-    "maxStalenessPrefix": 100
-  },
-  "databaseAccountOfferType": "Standard",
-  "documentEndpoint": "https://***.documents.azure.com:443/",
-  "enableAutomaticFailover": false,
-  "failoverPolicies": [
-    {
-      "failoverPriority": 0,
-      "id": "***-eastus",
-      "locationName": "East US"
-    }
-  ],
-  "id": "/subscriptions/e729c299-db43-40ce-991a-7e4572a69d50/resourceGroups/CosmosDB/providers/Microsoft.DocumentDB/databaseAccounts/****",
-  "ipRangeFilter": "",
-  "kind": "MongoDB",
-  "location": "East US",
-  "name": "*****",
-  "provisioningState": "Succeeded",
-  "readLocations": [
-    {
-      "documentEndpoint": "https://****-eastus.documents.azure.com:443/",
-      "failoverPriority": 0,
-      "id": "*****-eastus",
-      "locationName": "East US",
-      "provisioningState": "Succeeded"
-    }
-  ],
-  "resourceGroup": "CosmosDB",
-  "tags": {},
-  "type": "Microsoft.DocumentDB/databaseAccounts",
-  "writeLocations": [
-    {
-      "documentEndpoint": "https://*****-eastus.documents.azure.com:443/",
-      "failoverPriority": 0,
-      "id": "*****-eastus",
-      "locationName": "East US",
-      "provisioningState": "Succeeded"
-    }
-  ]
-}
--eastus",
-      "locationName": "East US"
-    }
-  ],
-  "id": "/subscriptions/e729c299-db43-40ce-991a-***********/resourceGroups/CosmosDB/providers/Microsoft.DocumentDB/databaseAccounts/****",
-  "ipRangeFilter": "",
-  "kind": "MongoDB",
-  "location": "East US",
-  "name": "**************",
-  "provisioningState": "Succeeded",
-  "readLocations": [
-    {
-      "documentEndpoint": "https://****-eastus.documents.azure.com:443/",
-      "failoverPriority": 0,
-      "id": "****-eastus",
-      "locationName": "East US",
-      "provisioningState": "Succeeded"
-    }
-  ],
-  "resourceGroup": "CosmosDB",
-  "tags": {},
-  "type": "Microsoft.DocumentDB/databaseAccounts",
-  "writeLocations": [
-    {
-      "documentEndpoint": "https://****-eastus.documents.azure.com:443/",
-      "failoverPriority": 0,
-      "id": "****-eastus",
-      "locationName": "East US",
-      "provisioningState": "Succeeded"
-    }
-  ]
-}
-```
-Lets get the db endpoint by running the following command:
-```
-cosmosdb_endpoint=$(az cosmosdb show -n $dbaccountname -g $resourcegroup | jq .writeLocations[0].documentEndpoint | awk -F '"' '{print $2}')
-echo $cosmosdb_endpoint
-```
-Lets also get the key for the account created:
-```
-cosmosdbkey=$(az cosmosdb list-keys -n $dbaccountname -g $resourcegroup | jq .primaryMasterKey | awk -F '"' '{print $2}')
-echo $cosmosdbkey
-```
-### Create the CosmosDB instance
-Before you execute the command lets set some environment variables:
-```
-dbname="cosmosdb"
-```
-Ensure the **cosmosdb_endpoint** and **cosmosdbkey** environment variables are set from the previous section:
-```
-echo $cosmosdb_endpoint
-echo $cosmosdbkey
-```
-Lets now run the CLI command to create the Database:
-```
-az cosmosdb database create --db-name $dbname --key $cosmosdbkey --name $dbname -g $resourcegroup --url-connection $cosmosdb_endpoint
-```
-
-The output will be:
-```
-{
-  "_colls": "colls/",
-  "_etag": "\"00007301-0000-0000-0000-59cb69350000\"",
-  "_rid": "WXUcAA==",
-  "_self": "dbs/WXUcAA==/",
-  "_ts": 1506502965,
-  "_users": "users/",
-  "id": "cosmosdb"
-}
-```
-
-### Create CosmosDB Collection
-Before you execute the command lets set some environment variables:
-```
-dbcollection="mongodbcollection"
-```
-lets now run the CLI command to create the collection:
-```
-az cosmosdb collection create --collection-name $dbcollection --db-name $dbname --key $cosmosdbkey --name $dbname -g $resourcegroup --url-connection $cosmosdb_endpoint
-```
-
-The output will be something like:
-```
-{
-  "collection": {
-    "_conflicts": "conflicts/",
-    "_docs": "docs/",
-    "_etag": "\"00007401-0000-0000-0000-59cb6a110000\"",
-    "_rid": "WXUcAMfIAgA=",
-    "_self": "dbs/WXUcAA==/colls/WXUcAMfIAgA=/",
-    "_sprocs": "sprocs/",
-    "_triggers": "triggers/",
-    "_ts": 1506503185,
-    "_udfs": "udfs/",
-    "id": "mongodbcollection",
-    "indexingPolicy": {
-      "automatic": true,
-      "excludedPaths": [],
-      "includedPaths": [
+      "command": null,
+      "environmentVariables": [],
+      "image": "alihhussain/azurepublic:CosmosDBACI",
+      "instanceView": null,
+      "name": "azurevote",
+      "ports": [
         {
-          "indexes": [
-            {
-              "dataType": "String",
-              "kind": "Range",
-              "precision": -1
-            },
-            {
-              "dataType": "Number",
-              "kind": "Range",
-              "precision": -1
-            }
-          ],
-          "path": "/*"
+          "port": 80
         }
       ],
-      "indexingMode": "consistent"
+      "resources": {
+        "limits": null,
+        "requests": {
+          "cpu": 1.0,
+          "memoryInGb": 1.0
+        }
+      },
+      "volumeMounts": null
     }
+  ],
+  "id": "/subscriptions/e729c299-db43-40ce-991a-7e4572a69d50/resourceGroups/iotdbrg/providers/Microsoft.ContainerInstance/containerGroups/azurevote",
+  "imageRegistryCredentials": null,
+  "ipAddress": {
+    "ip": "52.168.142.183",
+    "ports": [
+      {
+        "port": 80,
+        "protocol": "TCP"
+      }
+    ]
   },
-  "offer": {
-    "_etag": "\"00007501-0000-0000-0000-59cb6a110000\"",
-    "_rid": "BN1W",
-    "_self": "offers/BN1W/",
-    "_ts": 1506503185,
-    "content": {
-      "offerIsRUPerMinuteThroughputEnabled": false,
-      "offerThroughput": 400
-    },
-    "id": "BN1W",
-    "offerResourceId": "WXUcAMfIAgA=",
-    "offerType": "Invalid",
-    "offerVersion": "V2",
-    "resource": "dbs/WXUcAA==/colls/WXUcAMfIAgA=/"
-  }
+  "location": "eastus",
+  "name": "azurevote",
+  "osType": "Linux",
+  "provisioningState": "Creating",
+  "resourceGroup": "iotdbrg",
+  "restartPolicy": null,
+  "state": null,
+  "tags": null,
+  "type": "Microsoft.ContainerInstance/containerGroups",
+  "volumes": null
 }
 ```
-###  Put together the python connection string
-
-The connection string for mongoDB will have the following struction:
-
-* mongodb://**YourDBName**:**YourKey**@**YourDBName**.documents.azure.com:10255/?ssl=true&replicaSet=globaldb"
-
-Lets get the values we need by recalling the environment variables set:
+Now lets get the public IP of the ACI that was created by running the following command:
 ```
-echo $dbaccountname
-echo $cosmosdbkey
-```
-Sample connection string will be:
-```
-"mongodb://iotdbaccount***:cOl25CnJVEonhsGShaSJZqCNYWPIR9j8mfcQLaloJwvy4oG5oZVF9aenWdUchYXHuRrLf2JZqwKOk********==@iotdbaccount***.documents.azure.com:10255/?ssl=true&replicaSet=globaldb"
+az container show --name <ACI-Name> --resource-group <YourResourceGroup>| jq .ipAddress.ip
 ```
 
-# Demo App
-Copy the entire [folder](https://github.com/alihhussain/AzureTemplates/tree/master/CosmosDB/azure-vote) in a local folder
-
-Modify the following values in the **[main.py](https://raw.githubusercontent.com/alihhussain/AzureTemplates/master/CosmosDB/azure-vote/main.py)** file
-
+A sample is shown below:
 ```
-url = <Put the connection string created in the previous section>
-db = client.<YourDBName>.<YourCollectionName> 
+az container show --name azurevote --resource-group CosmosDB | jq .ipAddress.ip
+"52.168.142.183"
 ```
-
-Run the following command to start the flask app
-```
-python main.py
-```
-
-

@@ -285,7 +285,7 @@ Sample connection string will be:
 ```
 
 # Demo App
-Copy the entire [folder](https://github.com/alihhussain/AzureTemplates/tree/master/CosmosDB/azure-vote) in a local folder
+Copy the entire [folder](https://github.com/AzureCAT-GSI/azure-serverless-workshop/tree/master/05_cosmosdb-to-aci/ACI/flaskDockerFile/build/src) in a local folder
 
 Modify the following values in the **[main.py](https://raw.githubusercontent.com/alihhussain/AzureTemplates/master/CosmosDB/azure-vote/main.py)** file
 
