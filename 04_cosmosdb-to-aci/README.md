@@ -3,7 +3,7 @@ The very first thing we need to do is setup CosmosDB.
 ## Prerequisites
 *   Azure Subscription
 *   Azure CLI
-*   jq (json Query)
+*   jq ([json Query](https://stedolan.github.io/jq/download/))
 ## The following steps are going to be taken to create a MongoDB within a CosmosDB Account
 * Authenticate in AzureCLI 2.0
 * Create Resource Group
