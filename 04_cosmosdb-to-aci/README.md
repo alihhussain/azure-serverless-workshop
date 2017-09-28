@@ -273,7 +273,7 @@ The output will be something like:
 
 The connection string for mongoDB will have the following struction:
 
-* mongodb://**YourDBName**:**YourKey**@**YourDBName**.documents.azure.com:10255/?ssl=true&replicaSet=globaldb"
+* mongodb://**YourDBAccountName**:**YourKey**@**YourDBAccountName**.documents.azure.com:10255/?ssl=true&replicaSet=globaldb"
 
 Lets get the values we need by recalling the environment variables set:
 ```
@@ -304,6 +304,7 @@ pip install flask
 Once pymongo module is install run the following command to start the flask app
 ```
 sudo python main.py
+for box
 ```
 
 
