@@ -245,10 +245,12 @@ docker push richardjortega/voting-app
 Now we need to tell Azure that we have an update to our container (*Note*: In production environments, you may want to enable [CI/CD for Web App for Containers](https://docs.microsoft.com/en-us/azure/app-service/containers/app-service-linux-cli#enable-continuous-deployments-for-custom-docker-images))
 
 ```
-az webapp config container set --name <app-name> --resource-group serverlessWorkshop03 --docker-custom-image-name <DockerHubUsername>/voting-app
+az webapp restart --name voting-app444 --resource-group serverlessWorkshop03
 ```
 
-Note that this may take a moment to restart.
+This will tell App Service to restart it which forces it to check if there have been any updates to the image (and if there are, download the updated layers).
+
+Note that this may take a moment to restart depending on the changes.
 
 Browse to the following URL using your web browser.
 
