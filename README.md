@@ -15,7 +15,7 @@ This lab will provide an overview of modern cloud technologies, specifically foc
 - Now that you know about containers, deploy a simple, stateless voting application using a new Infrastructure-as-a-Service where containers are a first-class citizen (similar to Virtual Machines).
 - Add a reliable, scalable non-relational database backend to the voting application
 
-[Module 06: Functions](06_functions/README.md)
+[Module 05: Functions](05_functions/README.md)
 - Send an email of the current results to yourself. 
 
 ## Code of Conduct
