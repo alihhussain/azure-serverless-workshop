@@ -153,11 +153,12 @@ The web app provides a hosting space for your code and provides a URL to view th
 
 In the following command, replace *\<app_name>* with a unique name (valid characters are `a-z`, `0-9`, and `-`). If `<app_name>` is not unique, you get the error message "Website with given name <app_name> already exists." The default URL of the web app is `https://<app_name>.azurewebsites.net`. 
 
+**Note**: App Service is looking at the root of the folder to items that resemble a Python application, because we have multiple modules in this workshop to make it easy for App Service to read the app we have another repo branch called `webapp-python` that only shows the code only at the root. In a normal development environment, your main app starter files would be at root and you typically wouldn't use the `--deployment-source-branch` option.
+
 ```
 az webapp create --name <app_name> --resource-group serverlessWorkshop --plan myAppServicePlan --deployment-local-git --deployment-source-branch webapp-python
 ```
 
-**Note**: App Service is looking at the root of the folder to items that resemble a Python application, because we have multiple modules in this workshop to make it easy for App Service to read the app we have another repo branch called `webapp-python` that only shows the code only at the root. In a normal development environment, your main app starter files would be at root.
 
 When the web app has been created, the Azure CLI shows information similar to the following example:
 
