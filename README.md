@@ -16,7 +16,10 @@ This lab will provide an overview of modern cloud technologies, specifically foc
 - Add a reliable, scalable non-relational database backend to the voting application
 
 [Module 05: Functions](05_functions/README.md)
-- Send an email of the current results to yourself. 
+- This module shows you from the portal how to use Azure Functions, it is not currently integrated with the voting app and is left as an exercise to the reader.
+
+[Module 06: Logic Apps](05_logic-apps/README.md)
+- This module shows you from the portal how to use Azure Logic Apps, it is not currently integrated with the voting app and is left as an exercise to the reader.
 
 ## Code of Conduct
 Code of Conduct This project has adopted the Microsoft Open Source Code of Conduct. For more information see the Code of Conduct FAQ or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
