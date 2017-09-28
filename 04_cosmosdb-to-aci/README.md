@@ -66,10 +66,11 @@ Your output will look like:
 ```
 ### Create CosmosDB Account
 Before you execute the command lets set some environment variables:
+Make sure to replace the <RandomDigit> to a numarical value. As a sample **"Mongodbcosmos678343"**
 ```
 resourcegroup="CosmosDB"
 dbkind="MongoDB"
-dbaccountname="mongodbcosmos$(shuf -i1-1000 -n1)"
+dbaccountname="mongodbcosmos<RandomDigit>"
 ```
 Lets now create the CosmosDB account by executing the following command:
 ```
