@@ -297,7 +297,7 @@ db = client.<YourDBName>.<YourCollectionName>
 Before running the python app locally insure pymongo binaries are install.
 To do so run the following command.
 ```
-pip install pymongo
+pip install pymongo flask
 ```
 
 Once pymongo module is install run the following command to start the flask app
