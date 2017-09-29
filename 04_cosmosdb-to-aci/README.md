@@ -3,7 +3,7 @@ The very first thing we need to do is setup CosmosDB.
 ## Prerequisites
 *   Azure Subscription
 *   Azure CLI
-*   jq (json Query)
+*   jq ([json Query](https://stedolan.github.io/jq/download/))
 ## The following steps are going to be taken to create a MongoDB within a CosmosDB Account
 * Authenticate in AzureCLI 2.0
 * Create Resource Group
@@ -66,10 +66,11 @@ Your output will look like:
 ```
 ### Create CosmosDB Account
 Before you execute the command lets set some environment variables:
+Make sure to replace the <RandomDigit> to a numarical value. As a sample **"Mongodbcosmos678343"**
 ```
 resourcegroup="CosmosDB"
 dbkind="MongoDB"
-dbaccountname="mongodbcosmos$(shuf -i1-1000 -n1)"
+dbaccountname="mongodbcosmos<RandomDigit>"
 ```
 Lets now create the CosmosDB account by executing the following command:
 ```
@@ -272,7 +273,7 @@ The output will be something like:
 
 The connection string for mongoDB will have the following struction:
 
-* mongodb://**YourDBName**:**YourKey**@**YourDBName**.documents.azure.com:10255/?ssl=true&replicaSet=globaldb"
+* mongodb://**YourDBAccountName**:**YourKey**@**YourDBAccountName**.documents.azure.com:10255/?ssl=true&replicaSet=globaldb"
 
 Lets get the values we need by recalling the environment variables set:
 ```
@@ -285,7 +286,7 @@ Sample connection string will be:
 ```
 
 # Demo App
-Copy the entire [folder](https://github.com/alihhussain/AzureTemplates/tree/master/CosmosDB/azure-vote) in a local folder
+Copy the entire [folder](https://github.com/AzureCAT-GSI/azure-serverless-workshop/tree/master/04_cosmosdb-to-aci/ACI/flaskDockerFile/build/src) in a local folder
 
 Modify the following values in the **[main.py](https://raw.githubusercontent.com/alihhussain/AzureTemplates/master/CosmosDB/azure-vote/main.py)** file
 
@@ -293,10 +294,17 @@ Modify the following values in the **[main.py](https://raw.githubusercontent.com
 url = <Put the connection string created in the previous section>
 db = client.<YourDBName>.<YourCollectionName> 
 ```
-
-Run the following command to start the flask app
+Before running the python app locally insure pymongo binaries are install.
+To do so run the following command.
 ```
-python main.py
+pip install pymongo
+pip install flask
+```
+
+Once pymongo module is install run the following command to start the flask app
+```
+sudo python main.py
+for box
 ```
 
 
